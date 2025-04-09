@@ -1,11 +1,17 @@
 package de.caritas.cob.userservice.api.config;
 
 import de.caritas.cob.userservice.api.admin.service.consultant.ConsultantReindexer;
+import io.sentry.SentryOptions;
 import java.time.Clock;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.Search;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,8 +25,15 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @ComponentScan(basePackages = {"de.caritas.cob.userservice"})
 @PropertySources({@PropertySource("classpath:messages.properties")})
-public class AppConfig {
+public class AppConfig implements ApplicationContextAware {
 
+  @Value("${sentry.environment}")
+  private String environment;
+
+  @Value("${sentry.sample-rate:0.5}")
+  private Double sampleRate;
+
+  private ApplicationContext context;
   /**
    * Activate the messages.properties for validation messages
    *
@@ -34,18 +47,11 @@ public class AppConfig {
     return validatorFactoryBean;
   }
 
-  // RestTemplate Bean
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder) {
     return builder.build();
   }
 
-  /**
-   * Builds an indexer for hibernate search.
-   *
-   * @param entityManagerFactory the manager factory bean
-   * @return an {@link AgencyReindexer} used to reindex entities
-   */
   @Bean
   public ConsultantReindexer consultantReindexer(EntityManagerFactory entityManagerFactory) {
     FullTextEntityManager manager =
@@ -56,5 +62,21 @@ public class AppConfig {
   @Bean
   public Clock clock() {
     return Clock.systemUTC();
+  }
+
+  @PostConstruct
+  public SentryOptions sentryOptions() {
+    SentryOptions options = context.getBean(SentryOptions.class);
+    options.setEnvironment(environment);
+    options.setTag("service", "MessageService");
+    options.setRelease("2.0.0");
+    options.setTracesSampleRate(sampleRate);
+    options.setSendDefaultPii(false);
+    return options;
+  }
+
+  @Override
+  public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    this.context = applicationContext;
   }
 }

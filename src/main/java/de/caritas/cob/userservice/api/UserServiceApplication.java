@@ -1,6 +1,7 @@
 package de.caritas.cob.userservice.api;
 
 import de.caritas.cob.userservice.api.config.CsrfSecurityProperties;
+import io.sentry.spring.EnableSentry;
 import java.util.concurrent.Executor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 @EnableScheduling
 @EnableConfigurationProperties({CsrfSecurityProperties.class})
+@EnableSentry(dsn = "${onlineberatung.sentry.dsn}")
 public class UserServiceApplication {
 
   @Value("${thread.executor.corePoolSize}")
