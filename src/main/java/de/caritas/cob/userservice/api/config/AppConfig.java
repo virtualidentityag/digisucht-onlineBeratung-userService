@@ -30,6 +30,9 @@ public class AppConfig implements ApplicationContextAware {
   @Value("${sentry.environment}")
   private String environment;
 
+  @Value("${onlineberatung.sentry.dsn}")
+  private String sentryDsn;
+
   @Value("${sentry.sample-rate:0.5}")
   private Double sampleRate;
 
@@ -68,6 +71,7 @@ public class AppConfig implements ApplicationContextAware {
   public SentryOptions sentryOptions() {
     SentryOptions options = context.getBean(SentryOptions.class);
     options.setEnvironment(environment);
+    options.setDsn(sentryDsn);
     options.setTag("service", "MessageService");
     options.setRelease("2.0.0");
     options.setTracesSampleRate(sampleRate);

@@ -18,7 +18,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 @EnableScheduling
 @EnableConfigurationProperties({CsrfSecurityProperties.class})
-@EnableSentry(dsn = "${onlineberatung.sentry.dsn}")
+@EnableSentry
 public class UserServiceApplication {
 
   @Value("${thread.executor.corePoolSize}")
