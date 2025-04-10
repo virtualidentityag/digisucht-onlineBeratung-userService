@@ -1,6 +1,7 @@
 package de.caritas.cob.userservice.api.adapters.web.controller.interceptor;
 
 import de.caritas.cob.userservice.api.service.LogService;
+import io.sentry.Sentry;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class ApiDefaultResponseEntityExceptionHandler {
   public ResponseEntity<Object> handleInternal(
       final RuntimeException ex, final WebRequest request) {
     LogService.logInternalServerError(ex);
-
+    Sentry.captureException(ex);
     return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
