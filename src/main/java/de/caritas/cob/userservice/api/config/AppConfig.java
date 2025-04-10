@@ -77,7 +77,7 @@ public class AppConfig implements ApplicationContextAware {
     SentryOptions options = new SentryOptions();
     options.setEnvironment(environment);
     options.setDsn(sentryDsn);
-    options.setTag("service", "MessageService");
+    options.setTag("service", "UserService");
     options.setRelease("2.0.0");
     options.setTracesSampleRate(sampleRate);
     options.setSendDefaultPii(false);
