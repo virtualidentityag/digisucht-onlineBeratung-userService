@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -71,6 +72,7 @@ public class AppConfig implements ApplicationContextAware {
 
   @Bean
   @Primary
+  @Profile("!test")
   public SentryOptions sentryOptions() {
     SentryOptions options = new SentryOptions();
     options.setEnvironment(environment);
@@ -79,6 +81,7 @@ public class AppConfig implements ApplicationContextAware {
     options.setRelease("2.0.0");
     options.setTracesSampleRate(sampleRate);
     options.setSendDefaultPii(false);
+    Sentry.init(options);
     return options;
   }
 
@@ -91,7 +94,6 @@ public class AppConfig implements ApplicationContextAware {
     options.setRelease("2.0.0");
     options.setTracesSampleRate(sampleRate);
     options.setSendDefaultPii(false);
-    Sentry.init(options);
   }
 
   @Override
