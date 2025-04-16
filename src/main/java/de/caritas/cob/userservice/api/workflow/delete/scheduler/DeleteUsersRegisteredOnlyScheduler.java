@@ -19,19 +19,12 @@ public class DeleteUsersRegisteredOnlyScheduler {
   @Value("${user.registeredonly.deleteWorkflow.enabled}")
   private boolean userRegisteredOnlyDeleteWorkflowEnabled;
 
-  @Value("${user.registeredonly.deleteWorkflow.afterSessionPurge.enabled}")
-  private boolean userRegisteredOnlyDeleteWorkflowAfterSessionPurgeEnabled;
-
   /** Entry method to perform deletion workflow. */
   @Scheduled(cron = "${user.registeredonly.deleteWorkflow.cron}")
   public void performDeletionWorkflow() {
     tenantContextProvider.setTechnicalContextIfMultiTenancyIsEnabled();
     if (userRegisteredOnlyDeleteWorkflowEnabled) {
       deleteUsersRegisteredOnlyService.deleteUserAccountsTimeSensitive();
-    }
-
-    if (userRegisteredOnlyDeleteWorkflowAfterSessionPurgeEnabled) {
-      deleteUsersRegisteredOnlyService.deleteUserAccountsTimeInsensitive();
     }
   }
 }
