@@ -3,6 +3,7 @@ package de.caritas.cob.userservice.api.config.auth;
 import static de.caritas.cob.userservice.api.config.auth.Authority.AuthorityValue.*;
 
 import de.caritas.cob.userservice.api.adapters.web.controller.interceptor.HttpTenantFilter;
+import de.caritas.cob.userservice.api.adapters.web.controller.interceptor.PerformanceMonitoringFilter;
 import de.caritas.cob.userservice.api.adapters.web.controller.interceptor.StatelessCsrfFilter;
 import de.caritas.cob.userservice.api.config.CsrfSecurityProperties;
 import org.keycloak.adapters.KeycloakConfigResolver;
@@ -45,6 +46,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
   private HttpTenantFilter tenantFilter;
 
+  @Value("${sentry.peformance.monitoring.enabled:false}")
+  private boolean performanceMonitoringEnabled;
+
   /**
    * Processes HTTP requests and checks for a valid spring security authentication for the
    * (Keycloak) principal (authorization header).
@@ -73,6 +77,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
             .disable()
             .addFilterBefore(new StatelessCsrfFilter(csrfSecurityProperties), CsrfFilter.class);
 
+    if (performanceMonitoringEnabled) {
+      http.addFilterBefore(new PerformanceMonitoringFilter(), CsrfFilter.class);
+    }
     httpSecurity = enableTenantFilterIfMultitenancyEnabled(httpSecurity);
 
     httpSecurity
