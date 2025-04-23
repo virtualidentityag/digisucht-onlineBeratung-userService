@@ -14,6 +14,7 @@ import de.caritas.cob.userservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.userservice.api.exception.httpresponses.RocketChatUnauthorizedException;
 import de.caritas.cob.userservice.api.exception.keycloak.KeycloakException;
 import de.caritas.cob.userservice.api.service.LogService;
+import io.sentry.Sentry;
 import java.net.UnknownHostException;
 import javax.validation.ConstraintViolationException;
 import lombok.NoArgsConstructor;
@@ -52,7 +53,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleJPAConstraintViolationException(
       final org.hibernate.exception.ConstraintViolationException ex, final WebRequest request) {
     log.error(BAD_REQUEST, ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
   }
 
@@ -60,6 +61,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleDistributedTransactionException(
       final DistributedTransactionException ex, final WebRequest request) {
     log.error("Distributed transaction failed to complete", ex);
+    Sentry.captureException(ex);
     return handleExceptionInternal(
         ex, null, ex.getCustomHttpHeaders(), HttpStatus.FAILED_DEPENDENCY, request);
   }
@@ -68,7 +70,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleCreateEnquiryMessageException(
       final CreateEnquiryMessageException ex, final WebRequest request) {
     log.error(BAD_REQUEST, ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
@@ -82,7 +84,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleCustomBadRequest(
       final BadRequestException ex, final WebRequest request) {
     log.warn(BAD_REQUEST, ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
@@ -96,7 +98,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleCustomBadRequest(
       final CustomValidationHttpStatusException ex, final WebRequest request) {
     ex.executeLogging();
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(
         ex, null, ex.getCustomHttpHeaders(), ex.getHttpStatus(), request);
   }
@@ -111,7 +113,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleBadRequest(
       final RuntimeException ex, final WebRequest request) {
     LogService.logWarn(ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
 
@@ -128,7 +130,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
       final HttpStatus status,
       final WebRequest request) {
     log.warn(USER_SERVICE_API_LOG_PLACEHOLDER, status.getReasonPhrase(), ex.getStackTrace());
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, headers, status, request);
   }
 
@@ -145,7 +147,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
       final HttpStatus status,
       final WebRequest request) {
     log.warn(USER_SERVICE_API_LOG_PLACEHOLDER, status.getReasonPhrase(), ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, headers, status, request);
   }
 
@@ -160,7 +162,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleUnauthorized(
       final RocketChatUnauthorizedException ex, final WebRequest request) {
     log.warn(ExceptionUtils.getStackTrace(ex));
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
   }
 
@@ -174,7 +176,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   protected ResponseEntity<Object> handleConflict(
       final RuntimeException ex, final WebRequest request) {
     log.warn(USER_SERVICE_API_LOG_PLACEHOLDER, HttpStatus.CONFLICT, ex.getStackTrace());
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
   }
 
@@ -188,7 +190,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   protected ResponseEntity<Object> handleCustomConflict(
       final ConflictException ex, final WebRequest request) {
     ex.executeLogging();
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.CONFLICT, request);
   }
 
@@ -202,7 +204,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleForbidden(
       final ForbiddenException ex, final WebRequest request) {
     ex.executeLogging();
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
   }
 
@@ -216,7 +218,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleForbidden(
       final NotFoundException ex, final WebRequest request) {
     ex.executeLogging();
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
@@ -239,7 +241,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleInternal(
       final RuntimeException ex, final WebRequest request) {
     LogService.logInternalServerError(ex);
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(
         null, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
@@ -254,7 +256,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleInternal(
       final InternalServerErrorException ex, final WebRequest request) {
     ex.executeLogging();
-
+    Sentry.captureException(ex);
     return handleExceptionInternal(
         null, null, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
   }
@@ -268,6 +270,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   @ExceptionHandler({NoContentException.class})
   public ResponseEntity<Object> handleInternal(
       final NoContentException ex, final WebRequest request) {
+    Sentry.captureException(ex);
     return handleExceptionInternal(null, null, new HttpHeaders(), HttpStatus.NO_CONTENT, request);
   }
 
@@ -281,7 +284,6 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
     if (HttpStatus.INTERNAL_SERVER_ERROR.equals(status)) {
       request.setAttribute("javax.servlet.error.exception", ex, 0);
     }
-
     return new ResponseEntity<>(body, headers, status);
   }
 }
