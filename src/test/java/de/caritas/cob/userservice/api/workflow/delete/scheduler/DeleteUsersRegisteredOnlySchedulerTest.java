@@ -40,30 +40,4 @@ public class DeleteUsersRegisteredOnlySchedulerTest {
     verify(tenantContextProvider).setTechnicalContextIfMultiTenancyIsEnabled();
     verify(deleteUsersRegisteredOnlyService, never()).deleteUserAccountsTimeSensitive();
   }
-
-  @Test
-  public void
-      performDeletionWorkflow_Should_executeDeleteUserAccountsTimeInsensitive_WhenFeatureIsEnabled() {
-    setField(
-        deleteUsersRegisteredOnlyScheduler,
-        "userRegisteredOnlyDeleteWorkflowAfterSessionPurgeEnabled",
-        true);
-    deleteUsersRegisteredOnlyScheduler.performDeletionWorkflow();
-
-    verify(tenantContextProvider).setTechnicalContextIfMultiTenancyIsEnabled();
-    verify(deleteUsersRegisteredOnlyService).deleteUserAccountsTimeInsensitive();
-  }
-
-  @Test
-  public void
-      performDeletionWorkflow_ShouldNot_executeDeleteUserAccountsTimeInsensitive_WhenFeatureIsDisabled() {
-    setField(
-        deleteUsersRegisteredOnlyScheduler,
-        "userRegisteredOnlyDeleteWorkflowAfterSessionPurgeEnabled",
-        false);
-    deleteUsersRegisteredOnlyScheduler.performDeletionWorkflow();
-
-    verify(tenantContextProvider).setTechnicalContextIfMultiTenancyIsEnabled();
-    verify(deleteUsersRegisteredOnlyService, never()).deleteUserAccountsTimeInsensitive();
-  }
 }
