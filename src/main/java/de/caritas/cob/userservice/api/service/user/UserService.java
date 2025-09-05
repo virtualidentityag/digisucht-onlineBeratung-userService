@@ -72,7 +72,7 @@ public class UserService {
       String email,
       boolean languageFormal,
       String preferredLanguage,
-      Boolean walkThroughEnabled){
+      Boolean walkThroughEnabled) {
     var user = new User(userId, oldId, username, email, languageFormal, walkThroughEnabled);
     auditingHandler.markCreated(user);
     if (nonNull(preferredLanguage)) {

@@ -592,7 +592,8 @@ public class TestConstants {
   public static final List<GroupMemberDTO> GROUP_MEMBER_DTO_LIST =
       Arrays.asList(
           GROUP_MEMBER_SYS_USER, GROUP_MEMBER_TECH_USER, GROUP_MEMBER_USER_1, GROUP_MEMBER_USER_2);
-  public static final User USER = new User(USER_ID, null, USERNAME, EMAIL, IS_LANGUAGE_FORMAL,true);
+  public static final User USER =
+      new User(USER_ID, null, USERNAME, EMAIL, IS_LANGUAGE_FORMAL, true);
   public static final User USER_WITH_RC_ID =
       new User(
           USER_ID,

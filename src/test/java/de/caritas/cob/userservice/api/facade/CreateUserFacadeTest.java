@@ -71,7 +71,6 @@ public class CreateUserFacadeTest {
 
   @Mock private AgencyService agencyService;
 
-
   @Test
   public void
       createUserAccountWithInitializedConsultingType_Should_throwExpectedStatusException_When_UsernameIsAlreadyExisting() {
@@ -191,7 +190,7 @@ public class CreateUserFacadeTest {
 
   @Test
   public void
-  updateKeycloakAccountAndCreateDatabaseUserAccount_Should_CreateUserWithWalkThrough_True() {
+      updateKeycloakAccountAndCreateDatabaseUserAccount_Should_CreateUserWithWalkThrough_True() {
     when(consultingTypeManager.getConsultingTypeSettings(any()))
         .thenReturn(CONSULTING_TYPE_SETTINGS_KREUZBUND);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
@@ -202,7 +201,8 @@ public class CreateUserFacadeTest {
     when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any(), eq(true)))
         .thenReturn(mockUser);
 
-    User result = createUserFacade.updateIdentityAndCreateAccount(USER_ID, USER_DTO_SUCHT, UserRole.USER);
+    User result =
+        createUserFacade.updateIdentityAndCreateAccount(USER_ID, USER_DTO_SUCHT, UserRole.USER);
 
     assertTrue(result.getWalkThroughEnabled());
   }
