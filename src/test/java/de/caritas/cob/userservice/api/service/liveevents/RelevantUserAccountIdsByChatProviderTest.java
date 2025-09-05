@@ -77,7 +77,7 @@ public class RelevantUserAccountIdsByChatProviderTest {
             + RandomStringUtils.randomAlphabetic(4, 8)
             + ".com";
 
-    return new User(userId, null, username, email, false);
+    return new User(userId, null, username, email, false, true);
   }
 
   @Test

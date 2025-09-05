@@ -57,7 +57,7 @@ public class SessionDataProviderTest {
   private ConsultingTypeManager consultingTypeManager;
 
   private final EasyRandom easyRandom = new EasyRandom();
-  private final User USER = new User(USER_ID, null, USERNAME, EMAIL, false);
+  private final User USER = new User(USER_ID, null, USERNAME, EMAIL, false, true);
   private final Consultant CONSULTANT =
       new Consultant(
           CONSULTANT_ID,

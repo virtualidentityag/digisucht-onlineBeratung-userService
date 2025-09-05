@@ -296,8 +296,8 @@ public class EmailNotificationFacadeTest {
           null,
           false,
           null);
-  private final User USER = new User(USER_ID, null, USERNAME_ENCODED, "email@email.de", false);
-  private final User USER_NO_EMAIL = new User(USER_ID, null, "username", "", false);
+  private final User USER = new User(USER_ID, null, USERNAME_ENCODED, "email@email.de", false, true);
+  private final User USER_NO_EMAIL = new User(USER_ID, null, "username", "", false, true);
   private final ConsultantAgency CONSULTANT_AGENCY =
       new ConsultantAgency(
           1L, CONSULTANT, AGENCY_ID, nowInUtc(), nowInUtc(), nowInUtc(), null, null);
