@@ -2,8 +2,8 @@ package de.caritas.cob.userservice.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.caritas.cob.userservice.api.adapters.web.dto.EmailNotificationsDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.NotificationsSettingsDTO;
@@ -92,7 +92,7 @@ class UserServiceMapperTest {
   }
 
   @Test
-  void adviceSeekerOf_Should_UpdateUserWalkThroughEnabled_If_PatchMapContainsItsKey(){
+  void adviceSeekerOf_Should_UpdateUserWalkThroughEnabled_If_PatchMapContainsItsKey() {
     User adviceSeeker = new User("userId", null, "username", "email", true, null);
     var map = new HashMap<String, Object>();
     map.put("walkThroughEnabled", true);
@@ -104,7 +104,7 @@ class UserServiceMapperTest {
   }
 
   @Test
-  void adviceSeekerOf_Should_NotUpdateUserWalkThroughEnabled_If_PatchMapDoesNotContainsItsKey(){
+  void adviceSeekerOf_Should_NotUpdateUserWalkThroughEnabled_If_PatchMapDoesNotContainsItsKey() {
     User adviceSeeker = new User("userId", null, "username", "email", true, null);
     var map = new HashMap<String, Object>();
     map.put("encourage2fa", true);
