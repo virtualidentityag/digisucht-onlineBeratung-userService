@@ -213,7 +213,7 @@ public class CreateUserFacadeTest {
     when(consultingTypeManager.getConsultingTypeSettings(any()))
         .thenReturn(CONSULTING_TYPE_SETTINGS_KREUZBUND);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
-    when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any()))
+    when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any(), any()))
         .thenThrow(new IllegalArgumentException());
 
     createUserFacade.updateIdentityAndCreateAccount(USER_ID, USER_DTO_SUCHT, UserRole.USER);
