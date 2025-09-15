@@ -9,9 +9,11 @@ import de.caritas.cob.userservice.api.adapters.web.dto.OtpType;
 import de.caritas.cob.userservice.api.adapters.web.dto.PatchUserDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.TwoFactorAuthDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDataResponseDTO;
+import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.config.auth.UserRole;
 import de.caritas.cob.userservice.api.helper.AuthenticatedUser;
 import de.caritas.cob.userservice.api.model.OtpInfoDTO;
+import de.caritas.cob.userservice.api.model.Session.SessionStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +34,8 @@ public class UserDtoMapper {
       UserDataResponseDTO userData,
       OtpInfoDTO otpInfoDTO,
       boolean isE2eEncEnabled,
-      boolean isDisplayNameAllowed) {
+      boolean isDisplayNameAllowed,
+      Optional<UserSessionResponseDTO> userSession) {
     var twoFactorAuthDTO = new TwoFactorAuthDTO();
 
     if (nonNull(otpInfoDTO)) {
@@ -50,13 +53,21 @@ public class UserDtoMapper {
       twoFactorAuthDTO.setSecret(otpInfoDTO.getOtpSecret());
     }
 
+    Boolean initialInquirySent =
+        userSession.isEmpty()
+            ? null
+            : !SessionStatus.isStatusValueInitial(userSession.get().getSession().getStatus());
+
     twoFactorAuthDTO.setIsToEncourage(userData.getEncourage2fa());
     userData.setTwoFactorAuth(twoFactorAuthDTO);
+
     userData.setE2eEncryptionEnabled(isE2eEncEnabled);
     userData.setIsDisplayNameEditable(
         isDisplayNameAllowed && userData.getUserRoles().contains(UserRole.CONSULTANT.getValue()));
 
     userData.setAppointmentFeatureEnabled(appointmentFeatureEnabled);
+
+    userData.setInitialInquirySent(initialInquirySent);
 
     return userData;
   }

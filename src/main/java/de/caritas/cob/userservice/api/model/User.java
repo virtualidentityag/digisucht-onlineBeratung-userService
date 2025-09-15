@@ -120,12 +120,16 @@ public class User implements TenantAware, NotificationsAware {
   @Column(name = "notifications_settings")
   private String notificationsSettings;
 
+  @Column(name = "walk_through_enabled", columnDefinition = "tinyint", nullable = false)
+  private Boolean walkThroughEnabled = true;
+
   public User(
       @Size(max = 36) @NonNull String userId,
       Long oldId,
       @Size(max = 255) @NonNull String username,
       @Size(max = 255) @NonNull String email,
-      boolean languageFormal) {
+      boolean languageFormal,
+      Boolean walkThroughEnabled) {
     this.userId = userId;
     this.oldId = oldId;
     this.username = username;
@@ -135,6 +139,7 @@ public class User implements TenantAware, NotificationsAware {
     setLanguageCode(LanguageCode.de);
     this.termsAndConditionsConfirmation = LocalDateTime.now();
     this.dataPrivacyConfirmation = LocalDateTime.now();
+    this.walkThroughEnabled = walkThroughEnabled;
   }
 
   @Override

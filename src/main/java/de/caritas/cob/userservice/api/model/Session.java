@@ -81,6 +81,10 @@ public class Session implements TenantAware {
     public static boolean isStatusValueInProgress(int value) {
       return value == IN_PROGRESS.getValue();
     }
+
+    public static boolean isStatusValueInitial(int value) {
+      return value == INITIAL.getValue();
+    }
   }
 
   /** Represents a session of a user */

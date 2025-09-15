@@ -62,7 +62,7 @@ public class UserService {
    */
   public User createUser(
       String userId, Long oldId, String username, String email, boolean languageFormal) {
-    return createUser(userId, oldId, username, email, languageFormal, null);
+    return createUser(userId, oldId, username, email, languageFormal, null, true);
   }
 
   public User createUser(
@@ -71,8 +71,9 @@ public class UserService {
       String username,
       String email,
       boolean languageFormal,
-      String preferredLanguage) {
-    var user = new User(userId, oldId, username, email, languageFormal);
+      String preferredLanguage,
+      Boolean walkThroughEnabled) {
+    var user = new User(userId, oldId, username, email, languageFormal, walkThroughEnabled);
     auditingHandler.markCreated(user);
     if (nonNull(preferredLanguage)) {
       user.setLanguageCode(LanguageCode.valueOf(preferredLanguage));

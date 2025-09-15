@@ -56,7 +56,7 @@ public class RelevantUserAccountIdsBySessionProviderTest {
             + "@"
             + RandomStringUtils.randomAlphabetic(4, 8)
             + ".com";
-    var user = new User("user", null, username, email, false);
+    var user = new User("user", null, username, email, false, true);
     session.setUser(user);
 
     return Optional.of(session);
