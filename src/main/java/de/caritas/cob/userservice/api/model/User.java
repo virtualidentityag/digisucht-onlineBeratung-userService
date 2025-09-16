@@ -121,7 +121,7 @@ public class User implements TenantAware, NotificationsAware {
   private String notificationsSettings;
 
   @Column(name = "walk_through_enabled", columnDefinition = "tinyint", nullable = false)
-  private Boolean walkThroughEnabled = true;
+  private Boolean walkThroughEnabled;
 
   public User(
       @Size(max = 36) @NonNull String userId,
