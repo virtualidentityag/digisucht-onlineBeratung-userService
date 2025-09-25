@@ -289,7 +289,8 @@ public class CreateEnquiryMessageFacadeTest {
             null,
             null,
             false,
-            null);
+            null,
+            true);
     this.extendedConsultingTypeResponseDTO = new ExtendedConsultingTypeResponseDTO();
     this.extendedConsultingTypeResponseDTO.setWelcomeMessage(new WelcomeMessageDTO());
     this.userInfoResponseDTO = new UserInfoResponseDTO();

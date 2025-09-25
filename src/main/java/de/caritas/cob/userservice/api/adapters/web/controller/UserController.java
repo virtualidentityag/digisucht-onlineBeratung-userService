@@ -44,6 +44,7 @@ import de.caritas.cob.userservice.api.adapters.web.dto.UpdateConsultantDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserDataResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionListResponseDTO;
+import de.caritas.cob.userservice.api.adapters.web.dto.UserSessionResponseDTO;
 import de.caritas.cob.userservice.api.adapters.web.mapping.ConsultantDtoMapper;
 import de.caritas.cob.userservice.api.adapters.web.mapping.UserDtoMapper;
 import de.caritas.cob.userservice.api.admin.facade.AdminUserFacade;
@@ -473,6 +474,7 @@ public class UserController implements UsersApi {
   @Override
   public ResponseEntity<UserDataResponseDTO> getUserData() {
     UserDataResponseDTO partialUserData;
+    Optional<UserSessionResponseDTO> userSession = Optional.empty();
     if (authenticatedUser.isConsultant()) {
       var consultant = userAccountProvider.retrieveValidatedConsultant();
       partialUserData = consultantDataProvider.retrieveData(consultant);
@@ -486,6 +488,9 @@ public class UserController implements UsersApi {
       partialUserData = keycloakUserDataProvider.retrieveAuthenticatedUserData();
     } else {
       var user = userAccountProvider.retrieveValidatedUser();
+      userSession =
+          Optional.ofNullable(sessionService.getSessionsForUserId(authenticatedUser.getUserId()))
+              .flatMap(list -> list.stream().findFirst());
       partialUserData = askerDataProvider.retrieveData(user);
     }
     var otpInfoDTO =
@@ -498,7 +503,8 @@ public class UserController implements UsersApi {
             partialUserData,
             otpInfoDTO,
             videoChatConfig.getE2eEncryptionEnabled(),
-            identityClientConfig.getDisplayNameAllowedForConsultants());
+            identityClientConfig.getDisplayNameAllowedForConsultants(),
+            userSession);
 
     return new ResponseEntity<>(fullUserData, HttpStatus.OK);
   }

@@ -11,9 +11,11 @@ import static de.caritas.cob.userservice.api.testHelper.TestConstants.USER_ID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -34,6 +36,7 @@ import de.caritas.cob.userservice.api.facade.rollback.RollbackFacade;
 import de.caritas.cob.userservice.api.helper.AgencyVerifier;
 import de.caritas.cob.userservice.api.helper.UserVerifier;
 import de.caritas.cob.userservice.api.manager.consultingtype.ConsultingTypeManager;
+import de.caritas.cob.userservice.api.model.User;
 import de.caritas.cob.userservice.api.service.agency.AgencyService;
 import de.caritas.cob.userservice.api.service.consultingtype.TopicService;
 import de.caritas.cob.userservice.api.service.statistics.StatisticsService;
@@ -185,6 +188,25 @@ public class CreateUserFacadeTest {
     verify(rollbackFacade, times(0)).rollBackUserAccount(any());
   }
 
+  @Test
+  public void
+      updateKeycloakAccountAndCreateDatabaseUserAccount_Should_CreateUserWithWalkThrough_True() {
+    when(consultingTypeManager.getConsultingTypeSettings(any()))
+        .thenReturn(CONSULTING_TYPE_SETTINGS_KREUZBUND);
+    doNothing().when(keycloakService).updatePassword(anyString(), anyString());
+
+    User mockUser = mock(User.class);
+    when(mockUser.getWalkThroughEnabled()).thenReturn(true);
+
+    when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any(), eq(true)))
+        .thenReturn(mockUser);
+
+    User result =
+        createUserFacade.updateIdentityAndCreateAccount(USER_ID, USER_DTO_SUCHT, UserRole.USER);
+
+    assertTrue(result.getWalkThroughEnabled());
+  }
+
   @Test(expected = InternalServerErrorException.class)
   public void
       updateKeycloakAccountAndCreateDatabaseUserAccount_Should_ThrowInternalServerErrorExceptionAndRollbackUserAccount_When_UpdateKeycloakPwFails() {
@@ -213,7 +235,7 @@ public class CreateUserFacadeTest {
     when(consultingTypeManager.getConsultingTypeSettings(any()))
         .thenReturn(CONSULTING_TYPE_SETTINGS_KREUZBUND);
     doNothing().when(keycloakService).updatePassword(anyString(), anyString());
-    when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any()))
+    when(userService.createUser(any(), any(), any(), any(), anyBoolean(), any(), any()))
         .thenThrow(new IllegalArgumentException());
 
     createUserFacade.updateIdentityAndCreateAccount(USER_ID, USER_DTO_SUCHT, UserRole.USER);

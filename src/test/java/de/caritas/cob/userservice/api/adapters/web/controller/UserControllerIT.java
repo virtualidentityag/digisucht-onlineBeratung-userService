@@ -92,7 +92,7 @@ public class UserControllerIT {
       new Cookie("rc_token", RandomStringUtils.randomAlphanumeric(43));
 
   private final String VALID_ENQUIRY_MESSAGE_BODY = "{\"message\": \"" + MESSAGE + "\"}";
-  private final User USER = new User(USER_ID, null, "username", "name@domain.de", false);
+  private final User USER = new User(USER_ID, null, "username", "name@domain.de", false, true);
   private final Consultant TEAM_CONSULTANT =
       new Consultant(
           CONSULTANT_ID,

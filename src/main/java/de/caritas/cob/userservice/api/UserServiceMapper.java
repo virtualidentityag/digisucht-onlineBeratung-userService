@@ -431,6 +431,9 @@ public class UserServiceMapper {
       var preferredLanguage = (String) patchMap.get("preferredLanguage");
       adviceSeeker.setLanguageCode(LanguageCode.valueOf(preferredLanguage));
     }
+    if (patchMap.containsKey("walkThroughEnabled")) {
+      adviceSeeker.setWalkThroughEnabled((Boolean) patchMap.get("walkThroughEnabled"));
+    }
     if (patchMap.containsKey("termsAndConditionsConfirmation")
         && (patchMap.get("termsAndConditionsConfirmation") instanceof Boolean)) {
       adviceSeeker.setTermsAndConditionsConfirmation(LocalDateTime.now());
