@@ -99,7 +99,8 @@ class UserRepositoryIT {
             0L,
             RandomStringUtils.randomAlphabetic(255),
             RandomStringUtils.randomAlphabetic(255),
-            false);
+            false,
+            true);
     this.user = userRepository.save(user);
   }
 }

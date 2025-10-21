@@ -63,6 +63,7 @@ public class AskerDataProvider {
         .dataPrivacyConfirmation(user.getDataPrivacyConfirmation())
         .termsAndConditionsConfirmation(user.getTermsAndConditionsConfirmation())
         .emailNotifications(emailNotificationMapper.toEmailNotificationsDTO(user))
+        .isWalkThroughEnabled(user.getWalkThroughEnabled())
         .build();
   }
 

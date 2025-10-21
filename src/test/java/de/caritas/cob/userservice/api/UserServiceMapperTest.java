@@ -1,11 +1,15 @@
 package de.caritas.cob.userservice.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.caritas.cob.userservice.api.adapters.web.dto.EmailNotificationsDTO;
 import de.caritas.cob.userservice.api.adapters.web.dto.NotificationsSettingsDTO;
 import de.caritas.cob.userservice.api.helper.UsernameTranscoder;
 import de.caritas.cob.userservice.api.model.Consultant;
+import de.caritas.cob.userservice.api.model.User;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -85,5 +89,28 @@ class UserServiceMapperTest {
     var e2eKey = userServiceMapper.e2eKeyOf(map);
 
     assertThat(e2eKey).isNotPresent();
+  }
+
+  @Test
+  void adviceSeekerOf_Should_UpdateUserWalkThroughEnabled_If_PatchMapContainsItsKey() {
+    User adviceSeeker = new User("userId", null, "username", "email", true, null);
+    var map = new HashMap<String, Object>();
+    map.put("walkThroughEnabled", true);
+
+    User result = userServiceMapper.adviceSeekerOf(adviceSeeker, map);
+
+    assertNotNull(result.getWalkThroughEnabled());
+    assertTrue(result.getWalkThroughEnabled());
+  }
+
+  @Test
+  void adviceSeekerOf_Should_NotUpdateUserWalkThroughEnabled_If_PatchMapDoesNotContainsItsKey() {
+    User adviceSeeker = new User("userId", null, "username", "email", true, null);
+    var map = new HashMap<String, Object>();
+    map.put("encourage2fa", true);
+
+    User result = userServiceMapper.adviceSeekerOf(adviceSeeker, map);
+
+    assertNull(result.getWalkThroughEnabled());
   }
 }

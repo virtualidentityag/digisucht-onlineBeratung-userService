@@ -133,7 +133,7 @@ class SessionServiceTest {
           null,
           false,
           null);
-  private final User USER = new User(USER_ID, null, "username", "name@domain.de", false);
+  private final User USER = new User(USER_ID, null, "username", "name@domain.de", false, true);
   private final Session SESSION = TestConstants.SESSION;
 
   private final Session SESSION_2 =

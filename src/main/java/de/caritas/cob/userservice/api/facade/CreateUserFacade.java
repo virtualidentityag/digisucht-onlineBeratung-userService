@@ -128,7 +128,8 @@ public class CreateUserFacade {
               userDTO.getUsername(),
               returnDummyEmailIfNoneGiven(userDTO, userId),
               isTrue(extendedConsultingTypeResponseDTO.getLanguageFormal()),
-              language);
+              language,
+              true);
 
     } catch (Exception ex) {
       rollBackAccountInitialization(userId, userDTO);
